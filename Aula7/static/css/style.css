@@ -3,10 +3,10 @@ body {
     font-family: Arial, sans-serif;
     background-image: url(https://i.pinimg.com/originals/4a/50/18/4a501819995cc25008268f2ec099d983.gif);
     
-    /* Copie as três linhas abaixo */
-    background-size: cover;       /* Estica o GIF para cobrir toda a tela */
-    background-repeat: no-repeat; /* Impede que o GIF fique se repetindo */
-    background-attachment: fixed; /* Mantém o fundo fixo ao rolar a página */
+    
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }   
 
 h1 {
