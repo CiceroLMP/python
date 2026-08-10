@@ -1,0 +1,36 @@
+{% if tarefas|length == 0 %}
+    <div class="col-12">
+        <p class="text-secondary text-center py-4">Nenhuma tarefa encontrada.</p>
+    </div>
+{% else %}
+    {% for t in tarefas %}
+        <div class="col-md-4">
+            <div class="card border-{{ status_cores[t['status']] }} shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="card-title">{{ t['titulo'] }}</h5>
+                        <span class="badge bg-{{ status_cores[t['status']] }}">
+                            {% if t['status'] == 'concluida' %}<i class="bi bi-check-circle-fill"></i>
+                            {% elif t['status'] == 'em_andamento' %}<i class="bi bi-arrow-repeat"></i>
+                            {% else %}<i class="bi bi-hourglass-split"></i>{% endif %}
+                            {{ status_labels[t['status']] }}
+                        </span>
+                    </div>
+                    <p class="card-text text-secondary">
+                        {% if t['descricao'] %}{{ t['descricao'] }}{% else %}<em>Sem descrição</em>{% endif %}
+                    </p>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('dashboard.editar', tarefa_id=t['id']) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <form method="POST" action="{{ url_for('dashboard.excluir', tarefa_id=t['id']) }}" onsubmit="return confirm('Excluir esta tarefa?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i> Excluir
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

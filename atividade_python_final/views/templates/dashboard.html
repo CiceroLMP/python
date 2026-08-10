@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block titulo %}Dashboard{% endblock %}
+{% block conteudo %}
+
+<div class="alert alert-info d-flex align-items-center gap-2">
+    <i class="bi bi-quote fs-4"></i>
+    <span><em>{{ frase }}</em></span>
+</div>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <h4 class="mb-0"><i class="bi bi-list-task"></i> Minhas tarefas</h4>
+
+    <div class="d-flex gap-2">
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-funnel"></i> Filtrar
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" id="menu-filtro">
+                <li><a class="dropdown-item filtro-status" href="#" data-status="todas">Todas</a></li>
+                <li><a class="dropdown-item filtro-status" href="#" data-status="pendente">Pendentes</a></li>
+                <li><a class="dropdown-item filtro-status" href="#" data-status="em_andamento">Em andamento</a></li>
+                <li><a class="dropdown-item filtro-status" href="#" data-status="concluida">Concluídas</a></li>
+            </ul>
+        </div>
+        <a href="{{ url_for('dashboard.nova_tarefa') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Nova tarefa
+        </a>
+    </div>
+</div>
+
+<div id="lista-tarefas" class="row g-3">
+    {% include "_tarefas_parcial.html" %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.querySelectorAll(".filtro-status").forEach(function (item) {
+    item.addEventListener("click", function (e) {
+        e.preventDefault();
+        const status = this.dataset.status;
+        fetch(`/api/v1/tarefas?status=${status}`)
+            .then(r => r.json())
+            .then(renderizarTarefas);
+    });
+});
+
+function iconeStatus(status) {
+    if (status === "concluida") return "bi-check-circle-fill";
+    if (status === "em_andamento") return "bi-arrow-repeat";
+    return "bi-hourglass-split";
+}
+
+function renderizarTarefas(tarefas) {
+    const container = document.getElementById("lista-tarefas");
+    if (tarefas.length === 0) {
+        container.innerHTML = `<div class="col-12"><p class="text-secondary text-center py-4">Nenhuma tarefa encontrada.</p></div>`;
+        return;
+    }
+    container.innerHTML = tarefas.map(t => `
+        <div class="col-md-4">
+            <div class="card border-${t.cor} shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="card-title">${t.titulo}</h5>
+                        <span class="badge bg-${t.cor}"><i class="bi ${iconeStatus(t.status)}"></i> ${t.status_label}</span>
+                    </div>
+                    <p class="card-text text-secondary">${t.descricao ? t.descricao : "<em>Sem descrição</em>"}</p>
+                    <div class="d-flex gap-2">
+                        <a href="/editar/${t.id}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i> Editar</a>
+                        <form method="POST" action="/excluir/${t.id}" onsubmit="return confirm('Excluir esta tarefa?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Excluir</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join("");
+}
+</script>
+{% endblock %}

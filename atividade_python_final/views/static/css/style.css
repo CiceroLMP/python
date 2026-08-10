@@ -1,0 +1,60 @@
+body {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.card {
+    transition: transform 0.15s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+#navbar-principal {
+    background-color: #f8f9fa;
+}
+
+/* ---------- Modo escuro ---------- */
+body.modo-escuro {
+    background-color: #121212;
+    color: #e9e9e9;
+}
+
+body.modo-escuro #navbar-principal {
+    background-color: #1e1e1e !important;
+}
+
+body.modo-escuro .card {
+    background-color: #1e1e1e;
+    color: #e9e9e9;
+    border-color: #333;
+}
+
+body.modo-escuro .form-control,
+body.modo-escuro .form-select {
+    background-color: #2a2a2a;
+    color: #e9e9e9;
+    border-color: #444;
+}
+
+body.modo-escuro .form-control::placeholder {
+    color: #999;
+}
+
+body.modo-escuro .text-secondary {
+    color: #b0b0b0 !important;
+}
+
+body.modo-escuro .dropdown-menu {
+    background-color: #1e1e1e;
+    color: #e9e9e9;
+}
+
+body.modo-escuro .dropdown-item {
+    color: #e9e9e9;
+}
+
+body.modo-escuro .dropdown-item:hover {
+    background-color: #2a2a2a;
+    color: #fff;
+}
